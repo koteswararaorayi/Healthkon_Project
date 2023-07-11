@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- <div class="content-wrapper"> -->
+    <!-- Content Header (Page header) -->
+
+
+    <!-- Main content -->
+          <div class="col-12">
+            <!-- /.card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Patient Details</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Patient Name</th>
+                    <th>Gender(s)</th>
+                    <th>Mobile No.</th>
+                    <th>Address</th>
+                  </tr>
+                  </thead>
+                  <tfoot>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Patient Name</th>
+                    <th>Gender(s)</th>
+                    <th>Mobile No.</th>
+                    <th>Address</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+    <!-- /.content -->
+  <!-- </div> -->
+  {% endblock %}
+
+{% block script %}
+
+<!-- Page specific script 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+<script>
+  $(document).ready(function(){
+          $.ajax({
+                type: "GET",
+                datatype : 'json',
+                url: "{% url 'patient:patient' %}",
+                success:function(response){
+                  var trHTML = '';
+                  $.each(response, function (i, item) {
+                    for (let x of item){
+                      trHTML += '<tr><td>'+ '<a href=patient_details?healthkon_id='+x.healthkon_id+'>'+
+                        x.healthkon_id +'</a>'+'</td><td>' + 
+                        x.name + '</td><td>' + 
+                        x.gender + '</td><td>' +
+                        x.mobile + '</td><td>' +
+                        x.address + '</td></tr>'
+                    };
+                  });
+                  $('#example1').append(trHTML);
+                },
+                
+                error:function(err){
+
+                }
+              })
+    
+    // $('#example2').DataTable({
+    //   "paging": true,
+    //   "lengthChange": false,
+    //   "searching": false,
+    //   "ordering": true,
+    //   "info": true,
+    //   "autoWidth": false,
+    //   "responsive": true,
+    // });
+
+  });
+  // var patient_table =  $("#example1").DataTable({
+  //           "responsive": true, 
+  //           "lengthChange": false,
+  //           "autoWidth": false,
+  //           "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]              
+  //         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+
+</script>
+
+{% endblock %}

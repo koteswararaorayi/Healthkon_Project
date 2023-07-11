@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+<style>
+.profile_img{
+  display: inline-block;
+  vertical-align: top;
+  
+
+}
+.profile_details{
+  display: inline-block;
+  margin-top: 20px;
+  
+}
+@media screen and (max-width: 768px) {
+  .profile_img{ display: flex;
+  justify-content: center;
+}
+  }
+
+</style>
+
+<div class="container-fluid">
+  <ul class="nav-item">
+    {% if user.is_authenticated %}
+    {% if messages %}
+    <ul class="messages" style="color:green">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>Welcome,{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endif %}
+  </ul>
+</div>
+
+<div class="col-md-12 d-flex justify-content-center" >
+  <div class="card card-success">
+    <div class="card-header">
+      <h3 class="card-title">User details</h3>
+    </div>
+    <div class="card-body ">
+
+        <div class="profile_img">
+          <img src="{% static 'dist/img/images.png' %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class=" profile_details">
+          <ul style="list-style-type: none;">
+            <li>
+            Healhkon ID : {{user.healthkon_id}}
+          </li>
+          <li>
+            Mobile : {{user.mobile}}
+          </li>
+          <li>
+            Email : {{user.email}}
+          </li>
+          <li>
+            Client : {{user.account_id}}
+          </li>
+          </ul>
+        </div>
+    
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title">Patient Form</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form action="{% url 'patient:patient' %}" method="post">
+      {% csrf_token %}
+      <div calss="row">
+
+      </div>
+      <div class="card-body row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <label for="patient_healthkon_id">Patient healthkon_id</label>
+                    <input type="text" class="form-control" id="patient_healthkon_id" placeholder="Enter patient_healthkon_id" name="patient_healthkon_id" value={{ healthkon_id }}>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+        <div class="form-group col-6">
+          <label for="first_name">First Name</label>
+          <input type="text" class="form-control" id="first_name" placeholder="Enter first_name" name="first_name"><br>
+          <label for="dateofbirth">Date of Birth</label>
+          <div class="input-group date" id="dateofbirth" data-target-input="nearest" >
+            <input type="text" placeholder="Date of Birth" class="form-control datetimepicker-input" data-target="#dateofbirth" name="dateofbirth" id="date_of_birth">
+            <div class="input-group-append" data-target="#dateofbirth" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+          </div><br>
+          <label for="bloodgroup">Blood  Group</label>
+          <input type="text" class="form-control" id="bloodgroup" placeholder="Blood  Group" name="bloodgroup"><br>
+          <label for="temperature">Temperature</label>
+          <input type="number" class="form-control" id="temperature" placeholder="Temperature in Fahrenheit" step="0.01" name="temperature"><br>
+          <label for="height">Height</label>
+          <input type="number" class="form-control" id="height" placeholder="Height in inches" step="0.01" name="height"><br>
+          <label for="address">Address</label>
+          <input type="text" class="form-control" id="address" placeholder="Address" name="address"><br>
+          <label for="description">Patient Description</label>
+          <textarea  class="form-control" rows="3" placeholder="Enter ..." name="description" id="description"></textarea><br>
+        </div>
+        <div class="form-group col-6">
+          <label for="last_name">Last Name</label>
+          <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name"><br>
+          <label for="first_name">Gender</label>
+          <select class="form-control select2bs4" style="width: 100%;" name="gender" id="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="others">Other</option>
+          </select>
+          <br>
+          <label for="first_name">Mobile Number</label>
+          <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" pattern="[1-9]{1}[0-9]{9}" maxlength="10" minlength="10" required><br>
+          <label for="glucose">Glucose</label>
+          <input type="number" class="form-control" id="glucose" placeholder="Glucose" step="1" name="glucose"><br>
+          <label for="weight">Weight</label>
+          <input type="number" class="form-control" id="weight" placeholder="Weight in Kgs" step="0.01" name="weight"><br>
+          <label for="allergies">Allergies</label>
+          <input type="text" class="form-control" id="allergies" placeholder="Allergies" name="allergies"><br>
+          <input type="hidden" class="form-control"  name="supporting_docs" id="supporting_docs" value="" >
+        </div>
+      </div>
+        <!-- /.card-body -->
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+
+
+    <form  enctype="multipart/form-data" id="fileupload">
+      <div class="card-body row">
+      <div class="form-group">
+        <label for="document">File input</label>
+        <div class="input-group">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input"  name="file_name" id="document">
+            <label class="custom-file-label" for="document">Choose file</label>
+          </div>
+
+            <button onclick="upload_file()" class="input-group-text">Upload</button>
+
+        </div>
+      </div>
+      </div> 
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+{% block script %}
+<!-- bs-custom-file-input -->
+
+<script>
+    let healthkon_id = $('#patient_healthkon_id').val()
+    console.log(healthkon_id)
+    $(document).ready(function(){
+    $.ajax({
+        type: 'get',
+        datatype : 'json',
+        data: { 'healthkon_id':healthkon_id },
+        url: "{% url 'patient:patient' %}",
+        success: function(response){
+            console.log(response);
+            x = response.data[0]
+            
+            $('#first_name').val(x['first_name'])
+            $('#date_of_birth').val(x['date_of_birth'])
+            $('#gender').val(x['gender']).change()
+            $('#bloodgroup').val(x['bloodgroup'])
+            //$('#temperature').val(x['gender'])
+            $('#height').val(x['height'])
+            $('#address').val(x['address'])
+            $('#description').val(x['description'])
+            $('#last_name').val(x['last_name'])
+            $('#mobile').val(x['mobile'])
+            //$('#glucose').val(x['gender'])
+            $('#weight').val(x['weight'])
+            $('#allergies').val(x['allergies'])
+            $('#supporting_docs').val(x['supporting_docs'])
+        },
+        error:function(response){
+            console.log('An error occurred.');
+            console.log(response)
+        }
+
+    })
+
+    });
+    //Date picker
+    bsCustomFileInput.init();
+    $('#dateofbirth').datetimepicker({
+        format: 'DD-MM-YYYY'
+    });
+
+
+
+</script>
+{% endblock %}
